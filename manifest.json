@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Sopeko - redditor's tickers bags",
+  "name": "Sopeko - Reddit Portfolio Tracker",
+  "description": "Displays stock tickers and portfolio holdings mentioned by Reddit users in their comment history.",
   "version": "1.0.0",
-  "description": "Show redditor's bags",
   "permissions": ["activeTab", "storage"],
   "host_permissions": [
     "https://www.reddit.com/*",
