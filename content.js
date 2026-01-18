@@ -452,10 +452,15 @@ async function processUsername(element) {
     );
     const badgesContainer = createBadges(data);
 
-    // Find the flair container and insert after it
-    const flairContainer = findFlairContainer(element);
-    flairContainer.insertAdjacentElement("afterend", badgesContainer);
-    console.log(LOG_PREFIX, "Badges inserted after flair for:", username);
+    // Only insert if badges were created (not null when all changes are 0%)
+    if (badgesContainer) {
+      // Find the flair container and insert after it
+      const flairContainer = findFlairContainer(element);
+      flairContainer.insertAdjacentElement("afterend", badgesContainer);
+      console.log(LOG_PREFIX, "Badges inserted after flair for:", username);
+    } else {
+      console.log(LOG_PREFIX, "No badges to display for:", username, "(all 0% changes)");
+    }
   } else if (!data || (Array.isArray(data) && data.length === 0)) {
     console.log(LOG_PREFIX, "No data or empty array for:", username);
   }
