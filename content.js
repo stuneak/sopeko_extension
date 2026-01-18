@@ -75,8 +75,12 @@ const EXCLUDED_USERNAMES = new Set([
   "CHAINSAW_VASECTOMY",
 ]);
 
-// Cache to avoid duplicate API calls
+// Cache to avoid duplicate API calls (max 100 items)
 const userCache = new Map();
+const USER_CACHE_MAX_SIZE = 100;
+
+// Store observer reference for cleanup
+let pageObserver = null;
 
 console.log(LOG_PREFIX, "Script loaded");
 
@@ -125,6 +129,11 @@ async function fetchUserMentions(username) {
             ":",
             response.data,
           );
+          // Remove oldest entries if cache is full
+          while (userCache.size >= USER_CACHE_MAX_SIZE) {
+            const oldestKey = userCache.keys().next().value;
+            userCache.delete(oldestKey);
+          }
           userCache.set(username, response.data);
           resolve(response.data);
         } else {
@@ -492,22 +501,27 @@ function processPage() {
 
 // Observe DOM changes for dynamically loaded content
 function setupObserver() {
+  // Disconnect existing observer if any
+  if (pageObserver) {
+    pageObserver.disconnect();
+  }
+
   console.log(LOG_PREFIX, "Setting up MutationObserver");
 
-  const observer = new MutationObserver(
+  pageObserver = new MutationObserver(
     debounce(() => {
       console.log(LOG_PREFIX, "DOM mutation detected, re-processing page");
       processPage();
     }, 500),
   );
 
-  observer.observe(document.body, {
+  pageObserver.observe(document.body, {
     childList: true,
     subtree: true,
   });
 
   console.log(LOG_PREFIX, "MutationObserver active");
-  return observer;
+  return pageObserver;
 }
 
 // Initialize extension
