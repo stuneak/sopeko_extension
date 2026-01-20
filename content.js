@@ -50,30 +50,8 @@ if (document.head) {
   });
 }
 
-// Usernames to exclude (mods, bots, special accounts)
-const EXCLUDED_USERNAMES = new Set([
-  "OhWowMuchFunYouGuys",
-  "miamihausjunkie",
-  "AnnArchist",
-  "Immersions-",
-  "butthoofer",
-  "AutoModerator",
-  "PennyBotWeekly",
-  "PennyPumper",
-  "TransSpeciesDog",
-  "the_male_nurse",
-  "VisualMod",
-  "OPINION_IS_UNPOPULAR",
-  "zjz",
-  "OSRSkarma",
-  "Dan_inKuwait",
-  "Swiifttx",
-  "teddy_riesling",
-  "Stylux",
-  "Latter-day_weeb",
-  "ShopBitter",
-  "CHAINSAW_VASECTOMY",
-]);
+// Usernames to exclude (mods, bots, special accounts) - fetched from API
+let EXCLUDED_USERNAMES = new Set();
 
 // Cache to avoid duplicate API calls (max 100 items)
 const userCache = new Map();
@@ -459,7 +437,12 @@ async function processUsername(element) {
       flairContainer.insertAdjacentElement("afterend", badgesContainer);
       console.log(LOG_PREFIX, "Badges inserted after flair for:", username);
     } else {
-      console.log(LOG_PREFIX, "No badges to display for:", username, "(all 0% changes)");
+      console.log(
+        LOG_PREFIX,
+        "No badges to display for:",
+        username,
+        "(all 0% changes)",
+      );
     }
   } else if (!data || (Array.isArray(data) && data.length === 0)) {
     console.log(LOG_PREFIX, "No data or empty array for:", username);
@@ -529,11 +512,44 @@ function setupObserver() {
   return pageObserver;
 }
 
+// Fetch excluded usernames from API via background script
+async function fetchExcludedUsernames() {
+  console.log(LOG_PREFIX, "Fetching excluded usernames from API...");
+
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage(
+      { type: "fetchExcludedUsernames" },
+      (response) => {
+        if (response && response.success && Array.isArray(response.data)) {
+          EXCLUDED_USERNAMES = new Set(response.data);
+          console.log(
+            LOG_PREFIX,
+            "Excluded usernames loaded:",
+            EXCLUDED_USERNAMES.size,
+            "users",
+          );
+          resolve(true);
+        } else {
+          console.error(
+            LOG_PREFIX,
+            "Failed to fetch excluded usernames:",
+            response?.error,
+          );
+          resolve(false);
+        }
+      },
+    );
+  });
+}
+
 // Initialize extension
-function init() {
+async function init() {
   console.log(LOG_PREFIX, "=== EXTENSION INITIALIZED ===");
   console.log(LOG_PREFIX, "Current URL:", window.location.href);
   console.log(LOG_PREFIX, "Document ready state:", document.readyState);
+
+  // Fetch excluded usernames first
+  await fetchExcludedUsernames();
 
   // Process existing content
   processPage();
