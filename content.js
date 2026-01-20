@@ -7,6 +7,11 @@ style.textContent = `
   .sopeko-more-btn {
     position: relative;
   }
+  .sopeko-more-btn:hover {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+    box-shadow: 0 2px 6px rgba(99, 102, 241, 0.5) !important;
+    transform: translateY(-1px);
+  }
   .sopeko-dropdown {
     pointer-events: auto;
   }
@@ -246,16 +251,21 @@ function createBadges(dataArray) {
   if (hiddenItems.length > 0) {
     const moreBtn = document.createElement("span");
     moreBtn.className = "sopeko-more-btn";
-    moreBtn.textContent = `+${hiddenItems.length}`;
+    // Show "9+" if more than 9 items, otherwise show actual count
+    const displayCount = hiddenItems.length > 9 ? "9+" : `+${hiddenItems.length}`;
+    moreBtn.textContent = displayCount;
     moreBtn.style.cssText = `
       margin-left: 3px;
-      padding: 1px 4px;
-      border-radius: 3px;
+      padding: 2px 6px;
+      border-radius: 10px;
       font-size: 10px;
-      font-weight: bold;
-      background-color: #6b7280;
+      font-weight: 600;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
       color: #ffffff;
       cursor: pointer;
+      box-shadow: 0 1px 3px rgba(99, 102, 241, 0.3);
+      transition: all 0.2s ease;
+      letter-spacing: 0.3px;
     `;
 
     // Create dropdown in body (avoids overflow/z-index issues)
