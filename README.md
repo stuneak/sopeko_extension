@@ -2,6 +2,8 @@
 
 Chrome extension that displays stock ticker badges next to Reddit usernames, showing which stocks they've mentioned and the price change since their mention.
 
+![Screenshot](screenshot.png)
+
 **Backend:** [sopeko_backend](https://github.com/stuneak/sopeko_backend)
 
 ## Setup
