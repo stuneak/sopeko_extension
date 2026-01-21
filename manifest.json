@@ -3,8 +3,7 @@
   "name": "Sopeko - Reddit Portfolio Tracker",
   "description": "Displays stock tickers and portfolio holdings mentioned by Reddit users in their comment history.",
   "version": "1.0.0",
-  "permissions": ["activeTab"],
-  "host_permissions": ["https://www.reddit.com/*", "https://sopeko.com/*"],
+  "host_permissions": ["https://sopeko.com/*"],
   "background": {
     "service_worker": "background.js"
   },
