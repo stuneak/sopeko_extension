@@ -1,5 +1,5 @@
 // Background service worker - handles API calls to bypass CORS
-const API_BASE_URL = "https://sopeko.com";
+const API_BASE_URL = "https://sopeko.com/api";
 
 const LOG_PREFIX = "[Sopeko BG]";
 
