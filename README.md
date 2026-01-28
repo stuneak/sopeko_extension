@@ -4,7 +4,7 @@ Chrome extension that displays stock ticker badges next to Reddit usernames, sho
 
 ![Screenshot](screenshot.png)
 
-**Backend:** [sopeko_backend](https://github.com/stuneak/sopeko_backend)
+**Backend:** [sopeko_backend](https://github.com/stuneak/sopeko.com)
 
 ## Setup
 
